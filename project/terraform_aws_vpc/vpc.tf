@@ -13,7 +13,6 @@ resource "aws_vpc" "first_vpc" {
 }
 
 ############ internet gateway creation #######
-
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.first_vpc.id
   tags = merge(
@@ -54,7 +53,7 @@ resource "aws_subnet" "private" {
   )
 }
 
-######### Database subnet creation #########
+######### Database subnet creation ###########
 resource "aws_subnet" "database" {
   count = length(var.database_subnet_cidrs)
   vpc_id     = aws_vpc.first_vpc.id
@@ -64,6 +63,19 @@ resource "aws_subnet" "database" {
     var.common_tags,
     {
     Name = "${local.resource_name}-database-${local.az_names[count.index]}"
+    }
+  )
+}
+
+######### Database subnet group creation #########
+resource "aws_db_subnet_group" "default" {
+  #name       = "${local.resource_name}"
+  subnet_ids = aws_subnet.database[*].id 
+  tags = merge(
+    var.common_tags,
+    var.database_subnet_group_tags,
+    {
+    Name = "${local.resource_name}"
     }
   )
 }
@@ -146,22 +158,22 @@ resource "aws_route" "database_route" {
 }
 
 #### associating route tables to subnets ######
-
 resource "aws_route_table_association" "public" {
-  count = lengt(var.public_subnet_cidrs)
+  count = length(var.public_subnet_cidrs)
   subnet_id      = element(aws_subnet.public[*].id, count.index)
   route_table_id = aws_route_table.public.id
 }
 
-
 resource "aws_route_table_association" "private" {
-  count = lengt(var.private_subnet_cidrs)
+  count = length(var.private_subnet_cidrs)
   subnet_id      = element(aws_subnet.private[*].id, count.index)
   route_table_id = aws_route_table.private.id
 }
 
 resource "aws_route_table_association" "database" {
-  count = lengt(var.database_subnet_cidrs)
+  count = length(var.database_subnet_cidrs)
   subnet_id      = element(aws_subnet.database[*].id, count.index)
   route_table_id = aws_route_table.database.id
 }
+
+

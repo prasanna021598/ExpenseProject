@@ -25,3 +25,7 @@ variable "private_subnet_cidrs" {
 variable "database_subnet_cidrs" {
   default = ["10.0.8.0/24" , "10.0.9.0/24"]
 }
+
+variable "peering_required" {
+  default = true
+  }

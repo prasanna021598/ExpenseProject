@@ -1,4 +1,5 @@
 ### VPC Variables #######
+
 variable "vpc_cidr" {
     type = string
     default = "10.0.0.0/16"
@@ -10,6 +11,7 @@ variable "enable_dns_hostnames" {
 }
 
 #### Project variables ####
+
 variable "project_name" {
   type = string
 }
@@ -56,7 +58,6 @@ variable "private_subnet_cidrs" {
   }
 }
 
-
 ###### Database subnet #########
 
 variable "database_subnet_cidrs" {
@@ -89,3 +90,25 @@ variable "database_route_table_tags" {
   type = map
   default = {}
 }
+
+
+## Peering connection ########
+ variable "peering_required" {
+   type = bool
+   default = false
+ }
+
+ variable "target_vpc_id" {
+   type = string
+   default = ""
+ }
+
+ variable "vpc_peering_tags" {
+   type = map 
+   default = {}
+ }
+
+ variable "database_subnet_group_tags" {
+   type = map 
+   default = {}
+ }

@@ -8,7 +8,7 @@ terraform {
 
 backend "s3" {
     bucket = "terraform-practice15"
-    key    = "expense_vpc_subnets_sa"
+    key    = "expense_vpc_subnets"
     dynamodb_table = "Dynamotableterraform"
     region = "us-east-1"
 }
